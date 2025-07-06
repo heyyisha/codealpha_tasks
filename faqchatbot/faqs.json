@@ -1,0 +1,42 @@
+[
+    {
+        "question": "What is Python?",
+        "answer": "Python is an interpreted, high-level, general-purpose programming language. Created by Guido van Rossum and first released in 1991, Python's design philosophy emphasizes code readability with its notable use of significant whitespace."
+    },
+    {
+        "question": "How do I install Python?",
+        "answer": "You can download Python from the official website (python.org). Choose the version appropriate for your operating system and follow the installation instructions. Many Linux and Mac systems come with Python pre-installed."
+    },
+    {
+        "question": "What are Python's key features?",
+        "answer": "Python features include: easy-to-learn syntax, interpreted nature, dynamic typing, automatic memory management, large standard library, and support for multiple programming paradigms (object-oriented, imperative, functional)."
+    },
+    {
+        "question": "How do I create a virtual environment in Python?",
+        "answer": "You can create a virtual environment using the 'venv' module: 'python -m venv myenv' (replace 'myenv' with your environment name). To activate it: On Windows: 'myenv\\Scripts\\activate', On Unix/MacOS: 'source myenv/bin/activate'."
+    },
+    {
+        "question": "What is PIP in Python?",
+        "answer": "PIP is the package installer for Python. You can use it to install packages from the Python Package Index (PyPI) and other indexes. Common commands: 'pip install package_name', 'pip uninstall package_name', 'pip list' to show installed packages."
+    },
+    {
+        "question": "How do I handle errors in Python?",
+        "answer": "Python uses try-except blocks for error handling. Example: try: # code that might raise an error except SomeError: # handle the error. You can also use 'finally' for cleanup code that runs regardless of errors."
+    },
+    {
+        "question": "What is the difference between lists and tuples?",
+        "answer": "Lists are mutable (can be changed after creation) while tuples are immutable (cannot be changed after creation). Lists use square brackets [], tuples use parentheses (). Both are ordered collections that can contain mixed types."
+    },
+    {
+        "question": "How do I read a file in Python?",
+        "answer": "You can use the 'open()' function: 'with open('filename.txt', 'r') as file: content = file.read()'. The 'with' statement ensures proper file closure. Modes include 'r' for read, 'w' for write, 'a' for append."
+    },
+    {
+        "question": "What are Python decorators?",
+        "answer": "Decorators are functions that modify the behavior of other functions. They're represented by the @ symbol. Example: @my_decorator def my_function(): pass. Decorators are useful for logging, access control, memoization, etc."
+    },
+    {
+        "question": "How do I use regular expressions in Python?",
+        "answer": "Python's 're' module provides regex support. Common functions: re.search() to find a pattern, re.match() to match at string start, re.findall() to find all matches, re.sub() for substitutions. Patterns use special syntax like \\d for digits."
+    }
+]
