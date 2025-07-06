@@ -1,0 +1,10 @@
+
+2. Add a `.gitignore` file for Python projects
+
+3. For submission to CodeAlpha:
+- Create a GitHub repository named `CodeAlpha_Language_Translation_Tool`
+- Upload all files (Python code, templates, README)
+- Include a demo video showing functionality
+- Share on LinkedIn as instructed
+
+Would you like me to modify any specific part of this README or add additional sections?
