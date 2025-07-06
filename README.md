@@ -1,10 +1,10 @@
 # codealpha_tasks
 
-#Language Translation Tool task 1
+# Language Translation Tool task 1
 
 A web-based language translation application that supports 100+ languages with text-to-speech and copy-to-clipboard functionality.
 
-##Features
+## Features
 
 Translate text between 100+ languages
 Auto-detect source language capability
@@ -14,7 +14,7 @@ Clean, user-friendly interface
 Responsive design works on desktop and mobile
 
 
-##Technologies Used
+## Technologies Used
 
 Python 3.7+
 Flask (web framework)
