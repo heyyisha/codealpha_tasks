@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Translation Tool</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .language-selectors {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .buttons {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        .error {
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+        .language-info {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Language Translation Tool</h1>
+        
+        <div class="language-selectors">
+            <div style="width: 48%;">
+                <label for="sourceLanguage">Source Language:</label>
+                <select id="sourceLanguage">
+                    <option value="auto">Auto Detect</option>
+                    {% for code, name in languages.items() %}
+                        <option value="{{ code }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="width: 48%;">
+                <label for="targetLanguage">Target Language:</label>
+                <select id="targetLanguage">
+                    {% for code, name in languages.items() %}
+                        <option value="{{ code }}" {% if code == 'en' %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <textarea id="sourceText" placeholder="Enter text to translate..."></textarea>
+        
+        <div class="buttons">
+            <button id="translateBtn">Translate</button>
+            <button id="clearBtn">Clear</button>
+        </div>
+        
+        <div id="resultContainer" style="display: none;">
+            <h3>Translation Result:</h3>
+            <div class="result-box">
+                <div id="translatedText"></div>
+                <div class="language-info" id="languageInfo"></div>
+            </div>
+            <div class="buttons" style="margin-top: 10px;">
+                <button id="copyBtn">Copy Text</button>
+                <button id="speakBtn">Speak Text</button>
+            </div>
+        </div>
+        
+        <div id="errorContainer" class="error"></div>
+    </div>
+
+    <script>
+        document.getElementById('translateBtn').addEventListener('click', translateText);
+        document.getElementById('clearBtn').addEventListener('click', clearText);
+        document.getElementById('copyBtn').addEventListener('click', copyText);
+        document.getElementById('speakBtn').addEventListener('click', speakText);
+        
+        function translateText() {
+            const sourceText = document.getElementById('sourceText').value;
+            const sourceLanguage = document.getElementById('sourceLanguage').value;
+            const targetLanguage = document.getElementById('targetLanguage').value;
+            const errorContainer = document.getElementById('errorContainer');
+            
+            errorContainer.textContent = '';
+            
+            if (!sourceText.trim()) {
+                errorContainer.textContent = 'Please enter some text to translate.';
+                return;
+            }
+            
+            fetch('/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text: sourceText,
+                    src_lang: sourceLanguage,
+                    dest_lang: targetLanguage
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    errorContainer.textContent = data.error;
+                } else {
+                    document.getElementById('translatedText').textContent = data.translated_text;
+                    document.getElementById('languageInfo').textContent = 
+                        `Translated from ${data.src_lang_full} to ${data.dest_lang_full}`;
+                    document.getElementById('resultContainer').style.display = 'block';
+                    
+                    // Store the translated text and language for copy/speak functions
+                    document.getElementById('translatedText').dataset.translatedText = data.translated_text;
+                    document.getElementById('translatedText').dataset.lang = targetLanguage;
+                }
+            })
+            .catch(error => {
+                errorContainer.textContent = 'An error occurred during translation.';
+                console.error('Error:', error);
+            });
+        }
+        
+        function clearText() {
+            document.getElementById('sourceText').value = '';
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('errorContainer').textContent = '';
+        }
+        
+        function copyText() {
+            const translatedText = document.getElementById('translatedText').dataset.translatedText;
+            
+            fetch('/copy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text: translatedText
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.status);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        function speakText() {
+            const translatedText = document.getElementById('translatedText').dataset.translatedText;
+            const lang = document.getElementById('translatedText').dataset.lang;
+            
+            fetch('/speak', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text: translatedText,
+                    lang: lang
+                }),
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
